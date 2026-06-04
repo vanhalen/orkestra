@@ -1,8 +1,8 @@
 {
   "name": "orkestra",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "Camada de seleção, comparação e recomendação de LLMs sobre o OpenRouter (BYOK).",
+  "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,9 +11,17 @@
     "type": "git",
     "url": "git+https://github.com/vanhalen/orkestra.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "llm",
+    "openrouter",
+    "ai",
+    "model-selection",
+    "model-comparison",
+    "fastify",
+    "byok"
+  ],
+  "author": "Rodrigo Chagas <contato@rodrigorchagas.com.br>",
+  "license": "MIT",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/vanhalen/orkestra/issues"
