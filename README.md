@@ -11,10 +11,10 @@ O Orkestra não hospeda modelos: usa o catálogo e o roteamento do OpenRouter e 
 
 ## 🚦 Status
 
-Projeto em desenvolvimento ativo. A v2 está sendo construída do zero seguindo o plano em [`docs/`](docs/); o protótipo inicial (rotas `/chat/*` com key via `.env`) foi **aposentado** nessa reconstrução.
+Projeto em desenvolvimento ativo. A v2 foi construída do zero seguindo o plano em [`docs/`](docs/); o protótipo inicial (rotas `/chat/*` com key via `.env`) foi **aposentado** nessa reconstrução.
 
-- **Em execução hoje:** esqueleto da API v2 — base ESM + TypeScript, validação com Zod, toolchain de qualidade (typecheck/ESLint/Prettier/Vitest) e a rota `GET /health`.
-- **Em construção (próximas sprints):** **BYOK por requisição**, catálogo `GET /v1/models` e as rotas `recommend` / `run` / `compare`, depois a tela de divulgação em Vue. Ver [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- **API pronta:** **BYOK por requisição**, catálogo `GET /v1/models` e as rotas `recommend` / `run` / `compare`, com segurança (helmet/cors/rate-limit), fallback + timeout e docs OpenAPI em `/docs`.
+- **Em construção:** a tela de divulgação em Vue (cliente visual da API). Ver [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 Para a visão e o plano completos, veja [`docs/VISAO.md`](docs/VISAO.md) e [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
@@ -71,7 +71,40 @@ npm run typecheck    # checagem de tipos (tsc --noEmit)
 npm run lint         # ESLint
 npm run format       # Prettier
 npm test             # Vitest
+npm run loadtest     # teste de carga (autocannon) contra /health (servidor no ar)
 ```
+
+## 🔌 API
+
+Documentação interativa (OpenAPI) em **`/docs`** com o servidor no ar. Rotas que chamam o OpenRouter exigem o header `Authorization: Bearer sk-or-...`.
+
+| Rota | Auth | Descrição |
+|------|:----:|-----------|
+| `GET /health` | — | Liveness |
+| `GET /v1/models` | — | Catálogo filtrável (`?supports=file,json&free=true&maxPrice=…&minContext=…&q=…`) |
+| `POST /v1/recommend` | opcional¹ | Melhor modelo para a tarefa (heurística; `validate:true` roda probe real) |
+| `POST /v1/run` | ✔ | Executa a tarefa com fallback e devolve resposta + modelo usado (+ PDF) |
+| `POST /v1/compare` | ✔ | Roda vários modelos em paralelo, lado a lado |
+
+¹ `recommend` só exige key quando `validate: true`.
+
+```bash
+# Recomendar o modelo mais barato que leia PDF e devolva JSON
+curl -X POST http://localhost:3000/v1/recommend -H "Content-Type: application/json" \
+  -d '{"task":"extrair campos de nota fiscal","priority":"cheapest","requirements":{"inputs":["pdf"],"wantJson":true}}'
+
+# Executar (auto escolhe + roda, com fallback)
+curl -X POST http://localhost:3000/v1/run \
+  -H "Authorization: Bearer sk-or-..." -H "Content-Type: application/json" \
+  -d '{"prompt":"Resuma este texto em 1 frase.","auto":{"priority":"fastest"}}'
+
+# Comparar modelos lado a lado
+curl -X POST http://localhost:3000/v1/compare \
+  -H "Authorization: Bearer sk-or-..." -H "Content-Type: application/json" \
+  -d '{"question":"Melhor estratégia de cache para API REST?","models":["google/gemini-2.5-flash","anthropic/claude-3.5-haiku"]}'
+```
+
+Contrato completo em [docs/API.md](docs/API.md).
 
 ## 🛠 Tecnologias
 

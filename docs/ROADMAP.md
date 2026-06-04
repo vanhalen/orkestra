@@ -60,11 +60,11 @@ Legenda: `[ ]` a fazer · `[~]` em andamento · `[x]` feito.
 ## Sprint 5 — Performance, usabilidade & docs da API
 > A API "lapidada": rápida, documentada, fácil de consumir.
 
-- [ ] `@fastify/swagger` + UI: OpenAPI a partir dos schemas; exemplos por rota.
-- [ ] Revisar timeouts/concorrência; medir p95 do `compare`.
-- [ ] Teste de carga com `autocannon`; documentar limites.
-- [ ] Revisar mensagens de erro e consistência dos contratos ([API.md](API.md)).
-- [ ] Atualizar `README.md` para a v2 (rotas novas, BYOK).
+- [x] `@fastify/swagger` + UI: OpenAPI a partir dos schemas Zod; UI em `/docs`, spec em `/docs/json`.
+- [x] Revisar timeouts/concorrência (timeout por modelo no client; compare paralelo; rate limit por IP).
+- [x] Teste de carga com `autocannon` (script `loadtest`): ~10.9k req/s, p99 ~5ms em `/health`; rate limit rejeita o excedente com 429.
+- [x] Mensagens de erro padronizadas (`{ error: { code, message } }`) e contrato em [API.md](API.md).
+- [x] `README.md` atualizado para a v2 (rotas, BYOK, `/docs`, scripts).
 
 ## Sprint 6 — Frontend (Vue 3 + Vite + Tailwind)
 > Cliente visual da API. Responsivo e usável.
