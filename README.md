@@ -28,6 +28,7 @@ Para a visão e o plano completos, veja [`docs/VISAO.md`](docs/VISAO.md) e [`doc
 | [docs/OPENROUTER.md](docs/OPENROUTER.md) | Capacidades do OpenRouter utilizadas |
 | [docs/DECISOES.md](docs/DECISOES.md) | Decisões de arquitetura (ADR) |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Sprints e tarefas |
+| [docs/DEPLOY.md](docs/DEPLOY.md) | Deploy (porta única ou separado) |
 
 ## 🚀 Como executar
 

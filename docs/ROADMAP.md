@@ -77,9 +77,10 @@ Legenda: `[ ]` a fazer · `[~]` em andamento · `[x]` feito.
 - [x] Estados de loading/erro; layout responsivo (grid). Build e `vue-tsc` verdes.
 
 ## Sprint 7 — Polimento & divulgação
-- [ ] Smoke E2E (API + web).
-- [ ] Notas de deploy (servir estáticos do build pela API ou hospedar separado).
-- [ ] Screenshots/GIF, README final, roteiro de demo.
+- [x] Smoke E2E (`npm run smoke`): health + catálogo real + recommend + run sem key.
+- [x] Notas de deploy ([DEPLOY.md](DEPLOY.md)): porta única (API serve `web/dist` via `plugins/staticWeb.ts`) ou separados.
+- [x] README final (rotas, web, deploy). Removida a dep órfã `@openrouter/sdk`.
+- [→] Screenshots/GIF da SPA: passo manual (rodar `web` e capturar) — não gerável headless.
 
 ---
 

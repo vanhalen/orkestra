@@ -11,6 +11,7 @@ import { errorHandlerPlugin } from "./plugins/errorHandler";
 import { securityPlugin } from "./plugins/security";
 import { authPlugin } from "./plugins/auth";
 import { docsPlugin } from "./plugins/docs";
+import { staticWebPlugin } from "./plugins/staticWeb";
 import { healthRoutes } from "./routes/health";
 import { modelsRoutes } from "./routes/models";
 import { recommendRoutes } from "./routes/recommend";
@@ -68,6 +69,9 @@ export function buildServer(env: Env, deps: ServerDeps = {}): FastifyInstance {
     app.register(recommendRoutes(catalog, clientFactory));
     app.register(runRoutes(catalog, clientFactory));
     app.register(compareRoutes(catalog, clientFactory));
+
+    // serve a SPA buildada (web/dist) se existir — registrado por último
+    app.register(staticWebPlugin);
 
     return app;
 }
