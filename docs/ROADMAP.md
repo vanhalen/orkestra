@@ -48,13 +48,14 @@ Legenda: `[ ]` a fazer · `[~]` em andamento · `[x]` feito.
 ## Sprint 4 — Execução & comparação (confiabilidade)
 > Rodar de verdade, sem nunca travar.
 
-- [ ] `core/runner.ts`: cadeia de fallback + timeout por modelo; suporte a `files`/PDF; `responseFormat`; retorna `attempts[]` + `modelUsed`.
-- [ ] `core/comparator.ts`: paralelo com `Promise.allSettled`, isola erro por modelo, anexa métricas.
-- [ ] `core/metrics.ts`: latência, custo (pricing×usage), tokens.
-- [ ] `routes/run.ts`: `POST /v1/run` (`models` OU `auto`).
-- [ ] `routes/compare.ts`: `POST /v1/compare`.
-- [ ] Religar a validação do `selector` ao `runner` real.
-- [ ] Testes de confiabilidade: 1º modelo falha → usa o próximo; timeout não trava; 1 modelo quebrado no compare não derruba os outros.
+- [x] `core/openrouterClient.ts`: client por-key (BYOK) + timeout (`AbortSignal`) + erro normalizado (sem vazar key).
+- [x] `core/runner.ts`: cadeia de fallback + timeout por modelo; suporte a `files`/PDF; `responseFormat`; `attempts[]` + `modelUsed`; `probeModels`.
+- [x] `core/comparator.ts`: paralelo com `Promise.allSettled`, isola erro por modelo.
+- [x] `core/metrics.ts`: custo (pricing×usage).
+- [x] `routes/run.ts`: `POST /v1/run` (`models` OU `auto`) + `files`/PDF.
+- [x] `routes/compare.ts`: `POST /v1/compare`.
+- [x] Religar a validação (`validate:true`) do recommend ao `probeModels` real.
+- [x] Testes de confiabilidade: fallback usa o próximo; todos falham → 502 com attempts; compare isola falha; run/compare exigem key.
 
 ## Sprint 5 — Performance, usabilidade & docs da API
 > A API "lapidada": rápida, documentada, fácil de consumir.

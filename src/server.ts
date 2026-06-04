@@ -6,16 +6,23 @@ import {
 } from "fastify-type-provider-zod";
 import type { Env } from "./env";
 import { createCatalog, type Catalog } from "./core/catalog";
+import { createOpenRouterClient, type OpenRouterClient } from "./core/openrouterClient";
 import { errorHandlerPlugin } from "./plugins/errorHandler";
 import { securityPlugin } from "./plugins/security";
 import { authPlugin } from "./plugins/auth";
 import { healthRoutes } from "./routes/health";
 import { modelsRoutes } from "./routes/models";
 import { recommendRoutes } from "./routes/recommend";
+import { runRoutes } from "./routes/run";
+import { compareRoutes } from "./routes/compare";
 
-/** Dependências injetáveis (facilita testes — ex.: catálogo com fetch fake). */
+/** Cria um cliente do OpenRouter para a key BYOK de uma requisição. */
+export type ClientFactory = (apiKey: string) => OpenRouterClient;
+
+/** Dependências injetáveis (facilita testes — catálogo e cliente fake). */
 export type ServerDeps = {
     catalog?: Catalog;
+    createClient?: ClientFactory;
 };
 
 /**
@@ -44,9 +51,21 @@ export function buildServer(env: Env, deps: ServerDeps = {}): FastifyInstance {
             timeoutMs: env.requestTimeoutMs,
         });
 
+    const clientFactory: ClientFactory =
+        deps.createClient ??
+        ((apiKey) =>
+            createOpenRouterClient({
+                apiKey,
+                timeoutMs: env.requestTimeoutMs,
+                httpReferer: env.httpReferer,
+                title: env.title,
+            }));
+
     app.register(healthRoutes);
     app.register(modelsRoutes(catalog));
-    app.register(recommendRoutes(catalog));
+    app.register(recommendRoutes(catalog, clientFactory));
+    app.register(runRoutes(catalog, clientFactory));
+    app.register(compareRoutes(catalog, clientFactory));
 
     return app;
 }
