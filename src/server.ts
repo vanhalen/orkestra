@@ -6,6 +6,9 @@ import {
 } from "fastify-type-provider-zod";
 import type { Env } from "./env";
 import { createCatalog, type Catalog } from "./core/catalog";
+import { errorHandlerPlugin } from "./plugins/errorHandler";
+import { securityPlugin } from "./plugins/security";
+import { authPlugin } from "./plugins/auth";
 import { healthRoutes } from "./routes/health";
 import { modelsRoutes } from "./routes/models";
 
@@ -15,17 +18,23 @@ export type ServerDeps = {
 };
 
 /**
- * Monta a instância do Fastify: liga o type provider do Zod (validação +
- * serialização a partir de schemas Zod) e registra as rotas.
+ * Monta a instância do Fastify: validação/serialização via Zod, camada de
+ * segurança (helmet/cors/rate-limit + bodyLimit), BYOK e as rotas.
  *
- * As rotas de recommend/run/compare e os plugins de segurança (auth BYOK, cors,
- * helmet, rate-limit) entram nas próximas sprints.
+ * As rotas de recommend/run/compare entram nas próximas sprints.
  */
 export function buildServer(env: Env, deps: ServerDeps = {}): FastifyInstance {
-    const app = Fastify({ logger: false }).withTypeProvider<ZodTypeProvider>();
+    const app = Fastify({
+        logger: false,
+        bodyLimit: env.maxBodyBytes,
+    }).withTypeProvider<ZodTypeProvider>();
 
     app.setValidatorCompiler(validatorCompiler);
     app.setSerializerCompiler(serializerCompiler);
+
+    app.register(errorHandlerPlugin);
+    app.register(securityPlugin(env));
+    app.register(authPlugin);
 
     const catalog =
         deps.catalog ??

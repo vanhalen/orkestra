@@ -14,6 +14,10 @@ export type Env = {
     requestTimeoutMs: number;
     /** TTL do cache do catálogo de modelos (ms). */
     catalogTtlMs: number;
+    /** Máximo de requisições por IP por minuto (rate limit). */
+    rateLimitMax: number;
+    /** Limite de tamanho do corpo da requisição em bytes (PDFs em base64). */
+    maxBodyBytes: number;
     /** Headers enviados ao OpenRouter (defaults; podem ser sobrescritos por requisição). */
     httpReferer: string;
     title: string;
@@ -43,6 +47,8 @@ export function loadEnv(): Env {
         webOrigin: str("WEB_ORIGIN", "*"),
         requestTimeoutMs: num("REQUEST_TIMEOUT_MS", 30_000),
         catalogTtlMs: num("CATALOG_TTL_MS", 300_000),
+        rateLimitMax: num("RATE_LIMIT_MAX", 120),
+        maxBodyBytes: num("MAX_BODY_BYTES", 10_485_760), // 10 MB
         httpReferer: str("HTTP_REFERER", "http://localhost:3000"),
         title: str("TITLE", "Orkestra"),
     };

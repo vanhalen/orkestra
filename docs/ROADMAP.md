@@ -30,11 +30,11 @@ Legenda: `[ ]` a fazer · `[~]` em andamento · `[x]` feito.
 ## Sprint 2 — Segurança (BYOK) & hardening
 > A camada de segurança antes de qualquer rota que gaste tokens.
 
-- [ ] `plugins/auth.ts`: extrai/valida `Authorization: Bearer`, formato `sk-or-`, injeta `request.openRouterKey`; **redação** em logs.
-- [ ] `plugins/security.ts`: `@fastify/helmet`, `@fastify/cors` (origem da SPA), `@fastify/rate-limit`, `bodyLimit`.
-- [ ] `plugins/errorHandler.ts`: resposta de erro uniforme + mapa de códigos.
-- [ ] Garantir que a key nunca aparece em log/erro/resposta.
-- [ ] Testes de segurança: key ausente/malformada → 401; body gigante → 413; rate limit → 429; key não vaza em erro.
+- [x] `plugins/auth.ts`: extrai/valida `Authorization: Bearer`, formato `sk-or-`, injeta `request.openRouterKey`; `requireApiKey` preHandler.
+- [x] `plugins/security.ts`: `@fastify/helmet`, `@fastify/cors` (origem da SPA via `WEB_ORIGIN`), `@fastify/rate-limit`, `bodyLimit`.
+- [x] `plugins/errorHandler.ts`: resposta de erro uniforme `{ error: { code, message } }` + `ApiError`.
+- [x] Garantir que a key nunca aparece em log/erro/resposta.
+- [x] Testes de segurança: key ausente/malformada → 401; rate limit → 429; key não vaza; catálogo público.
 
 ## Sprint 3 — Motor de recomendação (híbrido)
 > O diferencial do Orkestra. Função pura, muito testável.
