@@ -11,12 +11,12 @@ O Orkestra não hospeda modelos: usa o catálogo e o roteamento do OpenRouter e 
 
 ## 🚦 Status
 
-Projeto em desenvolvimento ativo, evoluindo de um protótipo para a plataforma completa.
+Projeto em desenvolvimento ativo. A v2 está sendo construída do zero seguindo o plano em [`docs/`](docs/); o protótipo inicial (rotas `/chat/*` com key via `.env`) foi **aposentado** nessa reconstrução.
 
-- **v1 (atual, no código):** protótipo funcional com duas rotas — `POST /chat/recommend` e `POST /chat/compare` — usando uma key configurada via `.env`.
-- **v2 (em construção):** API redesenhada com **BYOK por requisição**, rotas `recommend` / `run` / `compare`, catálogo filtrável e uma tela de divulgação em Vue.
+- **Em execução hoje:** esqueleto da API v2 — base ESM + TypeScript, validação com Zod, toolchain de qualidade (typecheck/ESLint/Prettier/Vitest) e a rota `GET /health`.
+- **Em construção (próximas sprints):** **BYOK por requisição**, catálogo `GET /v1/models` e as rotas `recommend` / `run` / `compare`, depois a tela de divulgação em Vue. Ver [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
-O desenho completo e o plano estão em [`docs/`](docs/). **Esta documentação descreve a v1 em execução**; para a direção do projeto, veja [`docs/VISAO.md`](docs/VISAO.md) e [`docs/ROADMAP.md`](docs/ROADMAP.md).
+Para a visão e o plano completos, veja [`docs/VISAO.md`](docs/VISAO.md) e [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## 📚 Documentação
 
@@ -29,44 +29,48 @@ O desenho completo e o plano estão em [`docs/`](docs/). **Esta documentação d
 | [docs/DECISOES.md](docs/DECISOES.md) | Decisões de arquitetura (ADR) |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Sprints e tarefas |
 
-## 🚀 Como executar (protótipo atual)
+## 🚀 Como executar
 
 ### Requisitos
 
 - **Node.js 22+** (mínimo 20)
-- Uma **API key** do [OpenRouter](https://openrouter.ai/settings/keys)
+- Para usar as rotas que chamam o OpenRouter (próximas sprints): uma **API key** do [OpenRouter](https://openrouter.ai/settings/keys), enviada **por requisição** (BYOK) — não vai no `.env`.
 
 ### Passos
 
 ```bash
 npm install
-cp .env.example .env      # preencha as variáveis
+cp .env.example .env      # opcional: todas as variáveis têm default
 npm run dev               # sobe a API em http://localhost:3000 (porta do .env)
 ```
 
-Variáveis do `.env` (protótipo v1):
-
-| Variável | Descrição |
-|----------|-----------|
-| `OPENROUTER_API_KEY` | Chave da API OpenRouter |
-| `HTTP_REFERER` | URL do seu app (exigido pelo OpenRouter) |
-| `TITLE` | Nome exibido nas requisições (`X-OpenRouter-Title`) |
-| `PORT` | Porta do servidor local |
-
-> Na **v2**, a key deixa de vir do `.env` e passa a ser enviada por requisição (BYOK) — ver [ADR-001](docs/DECISOES.md).
-
-### Rotas do protótipo
+Verifique que está no ar:
 
 ```bash
-# Recomendação do OpenRouter (por preço / throughput / latência)
-curl -X POST http://localhost:3000/chat/recommend \
-  -H "Content-Type: application/json" \
-  -d '{"question": "Qual LLM é melhor para tradução?"}'
+curl http://localhost:3000/health
+# → {"status":"ok"}
+```
 
-# Comparativo lado a lado de vários modelos
-curl -X POST http://localhost:3000/chat/compare \
-  -H "Content-Type: application/json" \
-  -d '{"question": "Qual LLM é melhor para tradução?", "models": ["google/gemma-4-31b-it:free"]}'
+O `.env` configura **apenas o servidor** (sem segredos de usuário). Todas as variáveis são opcionais:
+
+| Variável | Default | Descrição |
+|----------|---------|-----------|
+| `PORT` | `3000` | Porta do servidor |
+| `HOST` | `0.0.0.0` | Host de bind |
+| `WEB_ORIGIN` | `*` | Origem permitida no CORS (a SPA) |
+| `REQUEST_TIMEOUT_MS` | `30000` | Timeout por chamada a modelo |
+| `HTTP_REFERER` / `TITLE` | — | Headers enviados ao OpenRouter |
+
+> A API key do OpenRouter é **BYOK**: enviada no header `Authorization` por requisição, nunca armazenada — ver [ADR-001](docs/DECISOES.md). O contrato das rotas da v2 está em [docs/API.md](docs/API.md).
+
+### Scripts
+
+```bash
+npm run dev          # desenvolvimento (watch)
+npm run typecheck    # checagem de tipos (tsc --noEmit)
+npm run lint         # ESLint
+npm run format       # Prettier
+npm test             # Vitest
 ```
 
 ## 🛠 Tecnologias
@@ -83,7 +87,8 @@ Contribuições são bem-vindas! Veja o [CONTRIBUTING.md](CONTRIBUTING.md). Para
 
 ## ⚠️ Segurança
 
-- Nunca commite sua `OPENROUTER_API_KEY`. O `.env` não é versionado.
+- **BYOK:** a API key do OpenRouter é enviada por requisição e nunca é armazenada nem logada pelo servidor. No frontend, fica só no navegador (`sessionStorage`).
+- Nunca cole sua API key em issues, logs ou prints. O `.env` (apenas config de servidor) não é versionado.
 - Modelos `:free` podem sofrer rate limit; erros individuais aparecem por modelo sem derrubar os demais.
 
 ## 📄 Licença

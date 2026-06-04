@@ -10,6 +10,13 @@ export default tseslint.config(
         languageOptions: {
             globals: { process: "readonly", console: "readonly" },
         },
+        rules: {
+            // permite parâmetros/variáveis intencionalmente não usados com prefixo "_"
+            "@typescript-eslint/no-unused-vars": [
+                "error",
+                { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+            ],
+        },
     },
     // desativa regras de estilo que conflitam com o Prettier
     prettier,

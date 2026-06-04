@@ -9,14 +9,14 @@ Legenda: `[ ]` a fazer · `[~]` em andamento · `[x]` feito.
 ## Sprint 0 — Fundação & tooling
 > Preparar o terreno: ferramentas de qualidade e reestruturação base. Sem mudar comportamento ainda.
 
-- [ ] Adicionar `typescript` como devDep e script `typecheck` (`tsc --noEmit`).
-- [ ] Configurar ESLint + Prettier (padrão do projeto: PT-BR, 4 espaços).
-- [ ] Adicionar Vitest + script `test`; um teste smoke.
-- [ ] Definir validação de input: **Zod** + type-provider (confirmar ADR-004).
-- [ ] Reestruturar `src/` conforme [ARQUITETURA.md](ARQUITETURA.md) (`plugins/`, `routes/`, `core/`, `schemas/`).
-- [ ] `env.ts`: config só do servidor; **remover `OPENROUTER_API_KEY` hardcoded/`.env`** (passa a ser BYOK).
-- [ ] Rota `GET /health` + teste.
-- [ ] Atualizar `.env.example` (sem a key de usuário) e `.gitignore` se preciso.
+- [x] Adicionar `typescript` como devDep e script `typecheck` (`tsc --noEmit`).
+- [x] Configurar ESLint + Prettier (padrão do projeto: PT-BR, 4 espaços).
+- [x] Adicionar Vitest + script `test`; um teste smoke.
+- [x] Definir validação de input: **Zod** + type-provider (ADR-004 → Zod). Migrado para **ESM** (`"type": "module"`).
+- [x] Reestruturar `src/` conforme [ARQUITETURA.md](ARQUITETURA.md) (`env.ts`, `server.ts`, `index.ts`, `routes/`). Protótipo v1 (`config.ts`, `openrouterService.ts`, rotas `/chat`) aposentado.
+- [x] `env.ts`: config só do servidor; **`OPENROUTER_API_KEY` removida** (passa a ser BYOK).
+- [x] Rota `GET /health` + teste.
+- [x] Atualizar `.env.example` (sem a key de usuário).
 
 ## Sprint 1 — Núcleo OpenRouter + catálogo
 > Falar com o OpenRouter de forma centralizada e expor o catálogo.
