@@ -12,6 +12,8 @@ export type Env = {
     webOrigin: string;
     /** Timeout por chamada a modelo no OpenRouter (ms). */
     requestTimeoutMs: number;
+    /** TTL do cache do catálogo de modelos (ms). */
+    catalogTtlMs: number;
     /** Headers enviados ao OpenRouter (defaults; podem ser sobrescritos por requisição). */
     httpReferer: string;
     title: string;
@@ -40,6 +42,7 @@ export function loadEnv(): Env {
         host: str("HOST", "0.0.0.0"),
         webOrigin: str("WEB_ORIGIN", "*"),
         requestTimeoutMs: num("REQUEST_TIMEOUT_MS", 30_000),
+        catalogTtlMs: num("CATALOG_TTL_MS", 300_000),
         httpReferer: str("HTTP_REFERER", "http://localhost:3000"),
         title: str("TITLE", "Orkestra"),
     };

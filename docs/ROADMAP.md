@@ -21,11 +21,11 @@ Legenda: `[ ]` a fazer · `[~]` em andamento · `[x]` feito.
 ## Sprint 1 — Núcleo OpenRouter + catálogo
 > Falar com o OpenRouter de forma centralizada e expor o catálogo.
 
-- [ ] `core/openrouterClient.ts`: client por-key + timeout (AbortController) + erro normalizado (sem vazar key).
-- [ ] `core/catalog.ts`: `fetchModels` (cache + TTL), `normalize` (→ `OrkModel`), `filter`, helpers de capacidade.
-- [ ] `core/types.ts`: `OrkModel`, capacidades.
-- [ ] `routes/models.ts`: `GET /v1/models` com filtros (`supports`, `free`, `maxPrice`, `minContext`, `q`).
-- [ ] Testes: normalização e filtros do catálogo (com fixture do `/models`).
+- [→] `core/openrouterClient.ts`: **movido para a Sprint 4** (só necessário ao chamar modelos; `/models` é público).
+- [x] `core/catalog.ts`: `fetchRawModels` (cache + TTL), `normalizeModel` (→ `OrkModel`), `filterModels`, helpers de capacidade.
+- [x] `core/types.ts`: `OrkModel`, `RawModel`, `Capability`, `CatalogFilter`.
+- [x] `routes/models.ts`: `GET /v1/models` com filtros (`supports`, `free`, `maxPrice`, `minContext`, `q`).
+- [x] Testes: normalização, filtros e cache/TTL do catálogo + rota (15 testes, fixture compartilhada).
 
 ## Sprint 2 — Segurança (BYOK) & hardening
 > A camada de segurança antes de qualquer rota que gaste tokens.
