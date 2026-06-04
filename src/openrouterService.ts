@@ -56,9 +56,7 @@ export class OpenRouterService {
         const messages = this.buildMessages(prompt);
 
         const recommendations = await Promise.all(
-            sorts.map((sortBy) =>
-                this.runRoutingRequest(candidates, messages, sortBy),
-            ),
+            sorts.map((sortBy) => this.runRoutingRequest(candidates, messages, sortBy)),
         );
 
         return { candidates, candidatesSkipped: skipped, recommendations };
@@ -122,9 +120,7 @@ export class OpenRouterService {
             return {
                 sortBy,
                 model: response.model ?? "desconhecido",
-                content: String(
-                    response.choices.at(0)?.message.content ?? "",
-                ),
+                content: String(response.choices.at(0)?.message.content ?? ""),
                 error: null,
                 latencyMs: Date.now() - start,
                 usage: response.usage,
@@ -157,9 +153,7 @@ export class OpenRouterService {
 
             return {
                 model: response.model ?? modelId,
-                content: String(
-                    response.choices.at(0)?.message.content ?? "",
-                ),
+                content: String(response.choices.at(0)?.message.content ?? ""),
                 error: null,
                 latencyMs: Date.now() - start,
                 usage: response.usage,
@@ -179,8 +173,6 @@ export class OpenRouterService {
             message?: string;
             body?: { error?: { message?: string } };
         };
-        return (
-            err.body?.error?.message ?? err.message ?? "Erro desconhecido"
-        );
+        return err.body?.error?.message ?? err.message ?? "Erro desconhecido";
     }
 }

@@ -5,7 +5,13 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "tsx watch --env-file=.env src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"{src,tests}/**/*.ts\"",
+    "format:check": "prettier --check \"{src,tests}/**/*.ts\"",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
@@ -29,10 +35,17 @@
   "homepage": "https://github.com/vanhalen/orkestra#readme",
   "dependencies": {
     "@openrouter/sdk": "^0.5.1",
-    "@types/node": "^24.13.0",
     "fastify": "^5.7.4"
   },
   "devDependencies": {
-    "tsx": "^4.22.4"
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^24.13.0",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.4.2",
+    "tsx": "^4.22.4",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0",
+    "vitest": "^2.1.8"
   }
 }
