@@ -1,0 +1,29 @@
+{
+  "name": "orkestra",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vanhalen/orkestra.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/vanhalen/orkestra/issues"
+  },
+  "homepage": "https://github.com/vanhalen/orkestra#readme",
+  "dependencies": {
+    "@types/node": "^24.13.0",
+    "fastify": "^5.7.4"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.4"
+  }
+}
