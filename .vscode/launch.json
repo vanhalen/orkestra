@@ -6,6 +6,7 @@
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/tsx",
+      "runtimeArgs": ["--env-file=${workspaceFolder}/.env"],
       "program": "${workspaceFolder}/src/index.ts",
       "cwd": "${workspaceFolder}",
       "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
