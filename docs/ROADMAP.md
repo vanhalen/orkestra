@@ -69,12 +69,12 @@ Legenda: `[ ]` a fazer · `[~]` em andamento · `[x]` feito.
 ## Sprint 6 — Frontend (Vue 3 + Vite + Tailwind)
 > Cliente visual da API. Responsivo e usável.
 
-- [ ] Scaffold `web/` (Vite + Vue 3 + Tailwind); proxy de dev p/ a API.
-- [ ] `ApiKeyForm`: cola a key, guarda em `sessionStorage`, envia no header.
-- [ ] `ModelPicker`: consome `GET /v1/models`, busca/filtra (free, maxPrice, capacidades).
-- [ ] Tela **Comparar**: escolhe modelos + pergunta → grade de respostas + métricas.
-- [ ] Tela **Recomendar/Executar**: tarefa + filtros (ex.: "mais barato") → modelo escolhido + resposta.
-- [ ] Estados de loading/erro; responsividade; acessibilidade básica.
+- [x] Scaffold `web/` (Vite + Vue 3 + Tailwind v4); cliente `api.ts` com BYOK via `sessionStorage`.
+- [x] `ApiKeyForm`: cola a key, guarda em `sessionStorage`, envia no header.
+- [x] `ModelPicker` (+ `ModelBadges`): consome `GET /v1/models`, busca/filtra (free, PDF, JSON).
+- [x] Tela **Comparar**: escolhe modelos + pergunta → grade de respostas + métricas (latência/custo).
+- [x] Tela **Recomendar/Executar**: tarefa + prioridade/filtros → modelo escolhido + executar e ver resposta.
+- [x] Estados de loading/erro; layout responsivo (grid). Build e `vue-tsc` verdes.
 
 ## Sprint 7 — Polimento & divulgação
 - [ ] Smoke E2E (API + web).

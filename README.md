@@ -106,6 +106,18 @@ curl -X POST http://localhost:3000/v1/compare \
 
 Contrato completo em [docs/API.md](docs/API.md).
 
+## 🖥 Tela de divulgação (web)
+
+SPA em **Vue 3 + Vite + Tailwind** (em [`web/`](web/)) que consome a API: cola a key do OpenRouter (fica só no `sessionStorage`), navega o catálogo, recomenda/executa e compara modelos lado a lado.
+
+```bash
+cd web
+npm install
+npm run dev      # http://localhost:5173 (aponta para a API em http://localhost:3000)
+```
+
+Configure a URL da API com `VITE_API_URL` se necessário. Suba a API (`npm run dev` na raiz) em paralelo.
+
 ## 🛠 Tecnologias
 
 - **TypeScript** + **Node.js 22**
