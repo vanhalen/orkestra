@@ -11,6 +11,7 @@ import { securityPlugin } from "./plugins/security";
 import { authPlugin } from "./plugins/auth";
 import { healthRoutes } from "./routes/health";
 import { modelsRoutes } from "./routes/models";
+import { recommendRoutes } from "./routes/recommend";
 
 /** Dependências injetáveis (facilita testes — ex.: catálogo com fetch fake). */
 export type ServerDeps = {
@@ -45,6 +46,7 @@ export function buildServer(env: Env, deps: ServerDeps = {}): FastifyInstance {
 
     app.register(healthRoutes);
     app.register(modelsRoutes(catalog));
+    app.register(recommendRoutes(catalog));
 
     return app;
 }

@@ -39,11 +39,11 @@ Legenda: `[ ]` a fazer · `[~]` em andamento · `[x]` feito.
 ## Sprint 3 — Motor de recomendação (híbrido)
 > O diferencial do Orkestra. Função pura, muito testável.
 
-- [ ] `core/selector.ts`: derivar requisitos da tarefa → filtrar → pontuar por `priority` → `{ best, shortlist, rationale }`.
-- [ ] Suporte às prioridades: `cheapest`, `fastest`, `largest_context`, `balanced`.
-- [ ] Validação opcional (`validate:true`): probe curto nos finalistas via `runner` (depende da Sprint 4 — usar stub e religar).
-- [ ] `routes/recommend.ts`: `POST /v1/recommend` + schema Zod.
-- [ ] Testes: filtros por capacidade (PDF→file, JSON→structured_outputs), ordenação por preço, empates, lista vazia.
+- [x] `core/selector.ts`: derivar requisitos da tarefa → filtrar → pontuar por `priority` → `{ best, shortlist, rationale }`.
+- [x] Suporte às prioridades: `cheapest`, `fastest`, `largest_context`, `balanced`.
+- [→] Validação opcional (`validate:true`): probe curto nos finalistas via `runner` — **wiring na Sprint 4** (depende do runner).
+- [x] `routes/recommend.ts`: `POST /v1/recommend` + schema Zod (`schemas/recommend.ts`, reusado pelo `auto` do /v1/run).
+- [x] Testes: filtros por capacidade, ordenação por prioridade, candidates, lista vazia (404), body inválido (400).
 
 ## Sprint 4 — Execução & comparação (confiabilidade)
 > Rodar de verdade, sem nunca travar.
