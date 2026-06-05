@@ -1,1 +1,87 @@
 @import "tailwindcss";
+
+@theme {
+    --color-paper: #faf8f4;
+    --color-card: #ffffff;
+    --color-ink: #18142a;
+    --color-soft: #6b6580;
+    --color-brand: #5326e0;
+    --color-brand-deep: #3a19b0;
+    --color-accent: #e7b24a;
+    --color-line: #ece8de;
+
+    --font-display: "Space Grotesk", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+    body {
+        margin: 0;
+        font-family: var(--font-display);
+        color: var(--color-ink);
+        background-color: var(--color-paper);
+        /* malha sutil violeta/dourada no topo, sobre o papel */
+        background-image:
+            radial-gradient(
+                42rem 42rem at 12% -10%,
+                color-mix(in srgb, var(--color-brand) 14%, transparent),
+                transparent 60%
+            ),
+            radial-gradient(
+                34rem 34rem at 100% 0%,
+                color-mix(in srgb, var(--color-accent) 16%, transparent),
+                transparent 55%
+            );
+        background-repeat: no-repeat;
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+/* kicker: rótulo em mono, caixa-alta, espaçado — assinatura editorial da marca */
+.kicker {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-soft);
+}
+
+/* reveal escalonado no load */
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.rise {
+    animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* transição de troca de aba */
+.fade-enter-active,
+.fade-leave-active {
+    transition:
+        opacity 0.22s ease,
+        transform 0.22s ease;
+}
+.fade-enter-from {
+    opacity: 0;
+    transform: translateY(6px);
+}
+.fade-leave-to {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+
+/* scrollbar discreta nas listas */
+.scroll-soft {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) transparent;
+}
