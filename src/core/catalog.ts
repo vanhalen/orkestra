@@ -2,6 +2,15 @@ import type { CatalogFilter, OrkModel, RawModel } from "./types";
 
 const MODELS_URL = "https://openrouter.ai/api/v1/models";
 
+/** Padrões de modelos especializados (não-generalistas): moderação, embeddings, rerank. */
+const NON_GENERAL_PATTERNS = ["content-safety", "guard", "moderation", "embed", "rerank"];
+
+/** true se o modelo serve para tarefas abertas (não é guardrail/embedding/rerank). */
+export function isGeneralPurpose(idOrName: string): boolean {
+    const haystack = idOrName.toLowerCase();
+    return !NON_GENERAL_PATTERNS.some((p) => haystack.includes(p));
+}
+
 function toPrice(raw?: string): number {
     const n = Number(raw);
     return Number.isFinite(n) ? n : 0;
@@ -31,6 +40,7 @@ export function normalizeModel(raw: RawModel): OrkModel {
             file: inputModalities.includes("file"),
             image: inputModalities.includes("image"),
         },
+        general: isGeneralPurpose(`${raw.id} ${raw.name ?? ""}`),
     };
 }
 

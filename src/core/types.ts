@@ -32,6 +32,8 @@ export type OrkModel = {
     pricing: { prompt: number; completion: number; image: number };
     inputModalities: string[];
     capabilities: Record<Capability, boolean>;
+    /** false para modelos especializados (moderação, embeddings, rerank). */
+    general: boolean;
 };
 
 /** Critérios de filtragem do catálogo. */

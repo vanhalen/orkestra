@@ -9,6 +9,7 @@ type ModelInput = {
     pricing?: OrkModel["pricing"];
     inputModalities?: string[];
     capabilities?: Partial<Record<Capability, boolean>>;
+    general?: boolean;
 };
 
 function model(p: ModelInput): OrkModel {
@@ -26,6 +27,7 @@ function model(p: ModelInput): OrkModel {
             image: false,
             ...p.capabilities,
         },
+        general: p.general ?? true,
     };
 }
 
@@ -103,5 +105,27 @@ describe("rankModels", () => {
     it("ordena por score desc", () => {
         const ranked = rankModels(models, "cheapest");
         expect(ranked[0].score).toBeGreaterThanOrEqual(ranked[ranked.length - 1].score);
+    });
+});
+
+describe("modelos especializados", () => {
+    const guard = model({
+        id: "nvidia/nemotron-content-safety:free",
+        name: "Content Safety",
+        pricing: { prompt: 0, completion: 0, image: 0 },
+        general: false,
+    });
+
+    it("exclui guard/moderação da recomendação aberta (mesmo sendo o mais barato)", () => {
+        const r = selectModel([guard, ...models], { task: "traduzir", priority: "cheapest" });
+        expect(r.shortlist.map((s) => s.model.id)).not.toContain(guard.id);
+    });
+
+    it("respeita o modelo especializado se vier em candidates explícitos", () => {
+        const r = selectModel([guard, ...models], {
+            task: "x",
+            candidates: [guard.id],
+        });
+        expect(r.best?.id).toBe(guard.id);
     });
 });

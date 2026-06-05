@@ -40,6 +40,14 @@ function totalPrice(m: OrkModel): number {
     return m.pricing.prompt + m.pricing.completion;
 }
 
+/** Rótulo amigável do custo combinado (US$ por 1M tokens). */
+function formatCost(m: OrkModel): string {
+    const total = totalPrice(m);
+    if (total === 0) return "gratuito";
+    if (total < 0) return "preço variável";
+    return `US$ ${(total * 1_000_000).toFixed(2)}/M tokens`;
+}
+
 /** Converte os requisitos da tarefa em um filtro de catálogo. */
 export function deriveFilter(input: RecommendInput): CatalogFilter {
     const req = input.requirements ?? {};
@@ -62,10 +70,19 @@ export function deriveFilter(input: RecommendInput): CatalogFilter {
 export function rankModels(models: OrkModel[], priority: Priority): ScoredModel[] {
     if (models.length === 0) return [];
 
-    const maxPrice = Math.max(...models.map(totalPrice));
+    // preço negativo = "variável/desconhecido" (ex.: auto routers) → não é o mais barato
+    const effPrice = (m: OrkModel) => {
+        const t = totalPrice(m);
+        return t < 0 ? Number.POSITIVE_INFINITY : t;
+    };
+    const finitePrices = models.map(effPrice).filter((p) => Number.isFinite(p));
+    const maxPrice = finitePrices.length ? Math.max(...finitePrices) : 0;
     const maxContext = Math.max(...models.map((m) => m.contextLength ?? 0), 1);
-    const priceScore = (m: OrkModel) =>
-        maxPrice === 0 ? 1 : 1 - totalPrice(m) / maxPrice;
+    const priceScore = (m: OrkModel) => {
+        const price = effPrice(m);
+        if (!Number.isFinite(price)) return 0;
+        return maxPrice === 0 ? 1 : 1 - price / maxPrice;
+    };
     const contextScore = (m: OrkModel) => (m.contextLength ?? 0) / maxContext;
 
     const scored = models.map((m): ScoredModel => {
@@ -90,14 +107,7 @@ export function rankModels(models: OrkModel[], priority: Priority): ScoredModel[
                 };
             case "cheapest":
             default:
-                return {
-                    model: m,
-                    score: priceScore(m),
-                    reason:
-                        totalPrice(m) === 0
-                            ? "gratuito"
-                            : `custo ${totalPrice(m)} USD/token`,
-                };
+                return { model: m, score: priceScore(m), reason: formatCost(m) };
         }
     });
 
@@ -130,8 +140,12 @@ function buildRationale(input: RecommendInput, eligibleCount: number): string {
 export function selectModel(models: OrkModel[], input: RecommendInput): RecommendResult {
     let universe = models;
     if (input.candidates?.length) {
+        // candidatos explícitos: respeita a escolha do usuário
         const set = new Set(input.candidates);
         universe = models.filter((m) => set.has(m.id));
+    } else {
+        // recomendação aberta: ignora modelos especializados (moderação, embeddings…)
+        universe = models.filter((m) => m.general);
     }
 
     const eligible = filterModels(universe, deriveFilter(input));
