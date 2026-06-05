@@ -8,6 +8,8 @@ export type OrkModel = {
     pricing: { prompt: number; completion: number; image: number };
     inputModalities: string[];
     capabilities: Record<string, boolean>;
+    /** false para modelos especializados (moderação, embeddings, rerank). */
+    general: boolean;
 };
 
 export type ScoredModel = { model: OrkModel; score: number; reason: string };

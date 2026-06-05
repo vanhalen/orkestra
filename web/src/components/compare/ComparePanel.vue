@@ -48,7 +48,7 @@ async function compare() {
                     v-model="question"
                     rows="3"
                     placeholder="ex.: qual a melhor estratégia de cache para uma API REST?"
-                    class="w-full resize-y rounded-xl border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-soft/70 focus:border-brand focus:ring-2 focus:ring-brand/20"
+                    class="w-full resize-y rounded-xl border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-soft/70 focus:border-gold focus:ring-2 focus:ring-gold/25"
                 ></textarea>
             </div>
             <div>
@@ -57,7 +57,7 @@ async function compare() {
             </div>
             <button
                 :disabled="loading"
-                class="w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-deep active:scale-[.99] disabled:opacity-50"
+                class="w-full rounded-xl bg-action px-4 py-3 text-sm font-semibold text-white transition hover:bg-action-deep active:scale-[.99] disabled:opacity-50"
                 @click="compare"
             >
                 {{ loading ? "Comparando…" : "Comparar respostas" }}

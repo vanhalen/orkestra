@@ -1,7 +1,24 @@
 <script setup lang="ts">
+import { computed, ref } from "vue";
 import type { CompareResult } from "../../api";
 
-defineProps<{ result: CompareResult | null; loading: boolean }>();
+const props = defineProps<{ result: CompareResult | null; loading: boolean }>();
+
+type SortBy = "latency" | "cost" | "default";
+const sortBy = ref<SortBy>("latency");
+
+const ordered = computed(() => {
+    const items = props.result?.results ?? [];
+    if (sortBy.value === "default") return items;
+    return [...items].sort((a, b) => {
+        // respostas com erro sempre por último
+        const ae = a.error ? 1 : 0;
+        const be = b.error ? 1 : 0;
+        if (ae !== be) return ae - be;
+        if (sortBy.value === "cost") return a.costUsd - b.costUsd;
+        return a.latencyMs - b.latencyMs;
+    });
+});
 </script>
 
 <template>
@@ -18,24 +35,39 @@ defineProps<{ result: CompareResult | null; loading: boolean }>();
             </p>
         </div>
 
+        <div v-if="result" class="flex items-center justify-between">
+            <p class="kicker">{{ ordered.length }} respostas</p>
+            <label class="flex items-center gap-1.5">
+                <span class="kicker">ordenar</span>
+                <select
+                    v-model="sortBy"
+                    class="rounded-lg border border-line bg-paper px-2 py-1 text-xs text-ink outline-none focus:border-gold"
+                >
+                    <option value="latency">mais rápido</option>
+                    <option value="cost">mais barato</option>
+                    <option value="default">ordem de seleção</option>
+                </select>
+            </label>
+        </div>
+
         <article
-            v-for="r in result?.results"
+            v-for="r in ordered"
             :key="r.model"
-            class="rise rounded-2xl border bg-card p-4 shadow-sm"
+            class="rise lift rounded-2xl border bg-card p-4 shadow-sm"
             :class="r.error ? 'border-red-200' : 'border-line'"
         >
-            <div class="mb-2 flex items-center justify-between gap-2">
-                <span class="truncate font-mono text-xs font-medium text-ink">{{
+            <div class="mb-2 flex min-w-0 items-center justify-between gap-2">
+                <span class="min-w-0 truncate font-mono text-xs font-medium text-ink">{{
                     r.model
                 }}</span>
                 <span class="shrink-0 font-mono text-[11px] text-soft">
                     {{ r.latencyMs }}ms · US$ {{ r.costUsd.toFixed(6) }}
                 </span>
             </div>
-            <p v-if="r.error" class="text-sm text-red-600">⚠ {{ r.error }}</p>
+            <p v-if="r.error" class="text-sm break-words text-red-600">⚠ {{ r.error }}</p>
             <pre
                 v-else
-                class="font-display text-sm leading-relaxed whitespace-pre-wrap text-ink"
+                class="text-sm leading-relaxed break-words whitespace-pre-wrap text-ink"
                 >{{ r.content }}</pre
             >
         </article>

@@ -40,10 +40,10 @@ function onForget() {
                 type="password"
                 placeholder="sk-or-..."
                 autocomplete="off"
-                class="flex-1 rounded-xl border border-line bg-paper px-3.5 py-2.5 font-mono text-sm text-ink outline-none placeholder:text-soft/60 focus:border-brand focus:ring-2 focus:ring-brand/20"
+                class="flex-1 rounded-xl border border-line bg-paper px-3.5 py-2.5 font-mono text-sm text-ink outline-none placeholder:text-soft/60 focus:border-gold focus:ring-2 focus:ring-gold/25"
             />
             <button
-                class="rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-deep active:scale-[.98]"
+                class="rounded-xl bg-action px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-action-deep active:scale-[.98]"
                 @click="onSave"
             >
                 Salvar

@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useCatalog } from "../../composables/useCatalog";
 import { emptyFilter, type CapKey, type CatalogFilterState } from "../../capabilities";
+import { sortPrice } from "../../price";
 import ModelFilters from "./ModelFilters.vue";
 import ModelCard from "./ModelCard.vue";
 
@@ -21,6 +22,7 @@ const filtered = computed(() => {
     const reqCaps = (Object.keys(f.caps) as CapKey[]).filter((k) => f.caps[k]);
 
     return models.value.filter((m) => {
+        if (!f.includeSpecialized && !m.general) return false;
         if (f.free && (m.pricing.prompt !== 0 || m.pricing.completion !== 0)) return false;
         if (reqCaps.some((c) => !m.capabilities[c])) return false;
         if (
@@ -32,6 +34,31 @@ const filtered = computed(() => {
         if (q && !`${m.id} ${m.name}`.toLowerCase().includes(q)) return false;
         return true;
     });
+});
+
+const sorted = computed(() => {
+    const list = [...filtered.value];
+    switch (filter.value.sort) {
+        case "name":
+            return list.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
+        case "context":
+            return list.sort((a, b) => (b.contextLength ?? 0) - (a.contextLength ?? 0));
+        case "expensive":
+            return list.sort((a, b) => {
+                const pa = sortPrice(a);
+                const pb = sortPrice(b);
+                const fa = Number.isFinite(pa);
+                const fb = Number.isFinite(pb);
+                if (fa !== fb) return fa ? -1 : 1; // "variável" por último
+                return pb - pa;
+            });
+        case "cheapest":
+        default:
+            return list.sort(
+                (a, b) =>
+                    sortPrice(a) - sortPrice(b) || a.name.localeCompare(b.name, "pt-BR"),
+            );
+    }
 });
 
 function toggle(id: string) {
@@ -49,9 +76,9 @@ function toggle(id: string) {
 
         <div class="flex items-center justify-between">
             <p class="kicker">
-                {{ filtered.length }} / {{ models.length }} modelos
+                {{ sorted.length }} / {{ models.length }} modelos
             </p>
-            <p v-if="selectable && selected.length" class="kicker text-brand">
+            <p v-if="selectable && selected.length" class="kicker text-amber-700">
                 {{ selected.length }} selecionado(s)
             </p>
         </div>
@@ -61,26 +88,26 @@ function toggle(id: string) {
 
         <ul class="scroll-soft max-h-[28rem] space-y-2 overflow-y-auto pr-1">
             <li
-                v-for="m in filtered"
+                v-for="m in sorted"
                 :key="m.id"
-                class="rounded-xl border bg-card px-3.5 py-3 transition"
+                class="lift overflow-hidden rounded-xl border bg-card px-3.5 py-3"
                 :class="[
-                    selectable ? 'cursor-pointer hover:border-brand/60' : '',
+                    selectable ? 'cursor-pointer' : '',
                     selected.includes(m.id)
-                        ? 'border-brand ring-1 ring-brand/30'
-                        : 'border-line',
+                        ? 'border-gold ring-1 ring-gold/40'
+                        : 'border-line hover:border-gold/50',
                 ]"
                 @click="toggle(m.id)"
             >
-                <div class="flex items-center gap-3">
+                <div class="flex min-w-0 items-center gap-3">
                     <input
                         v-if="selectable"
                         type="checkbox"
-                        class="accent-brand"
+                        class="shrink-0 accent-gold"
                         :checked="selected.includes(m.id)"
                         @click.stop="toggle(m.id)"
                     />
-                    <ModelCard :model="m" class="flex-1" :selected="selected.includes(m.id)" />
+                    <ModelCard :model="m" class="min-w-0 flex-1" />
                 </div>
             </li>
         </ul>

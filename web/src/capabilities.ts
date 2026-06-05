@@ -34,6 +34,8 @@ export const CAPABILITIES: Array<{ key: CapKey; label: string; short: string; he
     },
 ];
 
+export type SortKey = "cheapest" | "expensive" | "context" | "name";
+
 export type CatalogFilterState = {
     q: string;
     free: boolean;
@@ -41,6 +43,9 @@ export type CatalogFilterState = {
     /** custo máximo em US$ por milhão de tokens */
     maxPriceMtok: string;
     minContext: string;
+    /** incluir modelos especializados (moderação, embeddings…) — ocultos por padrão */
+    includeSpecialized: boolean;
+    sort: SortKey;
 };
 
 export function emptyFilter(): CatalogFilterState {
@@ -50,5 +55,7 @@ export function emptyFilter(): CatalogFilterState {
         caps: { file: false, image: false, json: false, tools: false, web: false },
         maxPriceMtok: "",
         minContext: "",
+        includeSpecialized: false,
+        sort: "cheapest",
     };
 }

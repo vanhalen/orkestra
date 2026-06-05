@@ -8,6 +8,12 @@
     --color-brand: #5326e0;
     --color-brand-deep: #3a19b0;
     --color-accent: #e7b24a;
+    /* dourado da marca — interativos secundários: abas, pills, seleção, foco */
+    --color-gold: #e7b24a;
+    --color-gold-deep: #ce9526;
+    /* verde sutil — AÇÃO PRINCIPAL: Salvar, Recomendar, Comparar */
+    --color-action: #059669;
+    --color-action-deep: #047857;
     --color-line: #ece8de;
 
     --font-display: "Space Grotesk", system-ui, sans-serif;
@@ -23,24 +29,29 @@
         font-family: var(--font-display);
         color: var(--color-ink);
         background-color: var(--color-paper);
-        /* malha sutil violeta/dourada no topo, sobre o papel */
         background-image:
             radial-gradient(
-                42rem 42rem at 12% -10%,
-                color-mix(in srgb, var(--color-brand) 14%, transparent),
+                40rem 30rem at 8% -8%,
+                color-mix(in srgb, var(--color-brand) 12%, transparent),
                 transparent 60%
             ),
             radial-gradient(
-                34rem 34rem at 100% 0%,
-                color-mix(in srgb, var(--color-accent) 16%, transparent),
+                30rem 24rem at 100% -4%,
+                color-mix(in srgb, var(--color-accent) 14%, transparent),
                 transparent 55%
             );
         background-repeat: no-repeat;
+        background-attachment: fixed;
         -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+    }
+    /* o `pre` herda a fonte de corpo, não monoespaçada */
+    pre {
+        font-family: inherit;
     }
 }
 
-/* kicker: rótulo em mono, caixa-alta, espaçado — assinatura editorial da marca */
+/* rótulo em mono, caixa-alta, espaçado — assinatura editorial da marca */
 .kicker {
     font-family: var(--font-mono);
     font-size: 0.6875rem;
@@ -49,11 +60,42 @@
     color: var(--color-soft);
 }
 
+/* numeral de "movimento" (I, II, III) — motivo de programa de concerto */
+.movement {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+}
+
+/* pentagrama decorativo do herói */
+.staff {
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 9px,
+        color-mix(in srgb, var(--color-ink) 7%, transparent) 9px,
+        color-mix(in srgb, var(--color-ink) 7%, transparent) 10px
+    );
+}
+
+/* hover sutil de elevação em cards/listas */
+.lift {
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease;
+}
+.lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px -18px color-mix(in srgb, var(--color-ink) 50%, transparent);
+}
+
 /* reveal escalonado no load */
 @keyframes rise {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(12px);
     }
     to {
         opacity: 1;
@@ -61,23 +103,29 @@
     }
 }
 .rise {
-    animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation: rise 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.rise-2 {
+    animation-delay: 0.08s;
+}
+.rise-3 {
+    animation-delay: 0.16s;
 }
 
 /* transição de troca de aba */
 .fade-enter-active,
 .fade-leave-active {
     transition:
-        opacity 0.22s ease,
-        transform 0.22s ease;
+        opacity 0.24s ease,
+        transform 0.24s ease;
 }
 .fade-enter-from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
 }
 .fade-leave-to {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateY(-8px);
 }
 
 /* scrollbar discreta nas listas */

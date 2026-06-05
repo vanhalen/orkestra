@@ -15,7 +15,7 @@ const caps = computed(() => CAPABILITIES.filter((c) => props.model.capabilities[
     <div class="flex flex-wrap gap-1">
         <span
             v-if="isFree"
-            class="rounded-md bg-accent/15 px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-[#8a6a14]"
+            class="rounded-md bg-emerald-500/15 px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-emerald-700"
         >
             grátis
         </span>
@@ -25,6 +25,12 @@ const caps = computed(() => CAPABILITIES.filter((c) => props.model.capabilities[
             class="rounded-md bg-brand/8 px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-brand"
         >
             {{ c.short }}
+        </span>
+        <span
+            v-if="!model.general"
+            class="rounded-md bg-soft/15 px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-soft"
+        >
+            especializado
         </span>
     </div>
 </template>

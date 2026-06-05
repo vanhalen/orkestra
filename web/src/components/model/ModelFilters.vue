@@ -11,12 +11,26 @@ function toggleCap(key: CapKey) {
 
 <template>
     <div class="space-y-3">
-        <input
-            v-model="filter.q"
-            type="search"
-            placeholder="Buscar por nome ou id…"
-            class="w-full rounded-xl border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-soft/70 focus:border-brand focus:ring-2 focus:ring-brand/20"
-        />
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <input
+                v-model="filter.q"
+                type="search"
+                placeholder="Buscar por nome ou id…"
+                class="flex-1 rounded-xl border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-soft/70 focus:border-gold focus:ring-2 focus:ring-gold/25"
+            />
+            <label class="flex shrink-0 items-center gap-1.5">
+                <span class="kicker">ordenar</span>
+                <select
+                    v-model="filter.sort"
+                    class="rounded-lg border border-line bg-paper px-2 py-2 text-xs text-ink outline-none focus:border-gold"
+                >
+                    <option value="cheapest">mais barato</option>
+                    <option value="expensive">mais caro</option>
+                    <option value="context">maior contexto</option>
+                    <option value="name">nome (A–Z)</option>
+                </select>
+            </label>
+        </div>
 
         <div class="flex flex-wrap gap-2">
             <button
@@ -24,7 +38,7 @@ function toggleCap(key: CapKey) {
                 class="rounded-full border px-3 py-1 text-xs font-medium transition"
                 :class="
                     filter.free
-                        ? 'border-accent bg-accent/15 text-[#8a6a14]'
+                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
                         : 'border-line text-soft hover:border-soft'
                 "
                 @click="filter.free = !filter.free"
@@ -39,8 +53,8 @@ function toggleCap(key: CapKey) {
                 class="rounded-full border px-3 py-1 text-xs font-medium transition"
                 :class="
                     filter.caps[c.key]
-                        ? 'border-brand bg-brand text-white'
-                        : 'border-line text-soft hover:border-brand/50 hover:text-brand'
+                        ? 'border-gold bg-gold text-ink'
+                        : 'border-line text-soft hover:border-gold/60 hover:text-amber-700'
                 "
                 @click="toggleCap(c.key)"
             >
@@ -62,7 +76,7 @@ function toggleCap(key: CapKey) {
                     min="0"
                     step="0.1"
                     placeholder="US$/M"
-                    class="w-24 rounded-lg border border-line bg-paper px-2 py-1 text-ink outline-none focus:border-brand"
+                    class="w-24 rounded-lg border border-line bg-paper px-2 py-1 text-ink outline-none focus:border-gold"
                 />
             </label>
             <label class="flex items-center gap-1.5">
@@ -78,8 +92,21 @@ function toggleCap(key: CapKey) {
                     min="0"
                     step="1000"
                     placeholder="tokens"
-                    class="w-28 rounded-lg border border-line bg-paper px-2 py-1 text-ink outline-none focus:border-brand"
+                    class="w-28 rounded-lg border border-line bg-paper px-2 py-1 text-ink outline-none focus:border-gold"
                 />
+            </label>
+            <label class="flex items-center gap-1.5">
+                <input
+                    v-model="filter.includeSpecialized"
+                    type="checkbox"
+                    class="accent-gold"
+                />
+                <span class="inline-flex items-center gap-1">
+                    incluir especializados
+                    <InfoTooltip
+                        text="Modelos de uso específico (moderação, embeddings, rerank) que não servem para tarefas abertas. Ocultos por padrão."
+                    />
+                </span>
             </label>
         </div>
     </div>

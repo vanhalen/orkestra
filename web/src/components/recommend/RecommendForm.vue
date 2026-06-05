@@ -67,7 +67,7 @@ function submit() {
                 v-model="form.task"
                 rows="3"
                 placeholder="ex.: extrair os itens e valores de uma nota fiscal em PDF e devolver em JSON"
-                class="w-full resize-y rounded-xl border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-soft/70 focus:border-brand focus:ring-2 focus:ring-brand/20"
+                class="w-full resize-y rounded-xl border border-line bg-paper px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-soft/70 focus:border-gold focus:ring-2 focus:ring-gold/25"
             ></textarea>
         </div>
 
@@ -86,8 +86,8 @@ function submit() {
                     class="rounded-full border px-3.5 py-1.5 text-xs font-medium transition"
                     :class="
                         form.priority === p.value
-                            ? 'border-brand bg-brand text-white'
-                            : 'border-line text-soft hover:border-brand/50 hover:text-brand'
+                            ? 'border-gold bg-gold text-ink'
+                            : 'border-line text-soft hover:border-gold/60 hover:text-amber-700'
                     "
                     @click="form.priority = p.value"
                 >
@@ -112,8 +112,8 @@ function submit() {
                     class="rounded-full border px-3.5 py-1.5 text-xs font-medium transition"
                     :class="
                         form.caps[c.key]
-                            ? 'border-brand bg-brand text-white'
-                            : 'border-line text-soft hover:border-brand/50 hover:text-brand'
+                            ? 'border-gold bg-gold text-ink'
+                            : 'border-line text-soft hover:border-gold/60 hover:text-amber-700'
                     "
                     @click="form.caps[c.key] = !form.caps[c.key]"
                 >
@@ -128,7 +128,7 @@ function submit() {
                 class="rounded-full border px-3 py-1.5 font-medium transition"
                 :class="
                     form.free
-                        ? 'border-accent bg-accent/15 text-[#8a6a14]'
+                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
                         : 'border-line hover:border-soft'
                 "
                 @click="form.free = !form.free"
@@ -148,7 +148,7 @@ function submit() {
                     min="0"
                     step="0.1"
                     placeholder="US$/M"
-                    class="w-24 rounded-lg border border-line bg-paper px-2 py-1 text-ink outline-none focus:border-brand"
+                    class="w-24 rounded-lg border border-line bg-paper px-2 py-1 text-ink outline-none focus:border-gold"
                 />
             </label>
             <label class="flex items-center gap-1.5">
@@ -164,7 +164,7 @@ function submit() {
                     min="0"
                     step="1000"
                     placeholder="tokens"
-                    class="w-28 rounded-lg border border-line bg-paper px-2 py-1 text-ink outline-none focus:border-brand"
+                    class="w-28 rounded-lg border border-line bg-paper px-2 py-1 text-ink outline-none focus:border-gold"
                 />
             </label>
         </div>
@@ -172,7 +172,7 @@ function submit() {
         <label
             class="flex items-center gap-2 rounded-xl bg-paper px-3 py-2.5 text-sm text-ink"
         >
-            <input v-model="form.validate" type="checkbox" class="accent-brand" />
+            <input v-model="form.validate" type="checkbox" class="accent-gold" />
             <span class="inline-flex items-center gap-1">
                 Validar antes de recomendar
                 <InfoTooltip
@@ -184,7 +184,7 @@ function submit() {
         <button
             type="submit"
             :disabled="loading"
-            class="w-full rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-deep active:scale-[.99] disabled:opacity-50"
+            class="w-full rounded-xl bg-action px-4 py-3 text-sm font-semibold text-white transition hover:bg-action-deep active:scale-[.99] disabled:opacity-50"
         >
             {{ loading ? "Regendo…" : "Recomendar modelo" }}
         </button>
