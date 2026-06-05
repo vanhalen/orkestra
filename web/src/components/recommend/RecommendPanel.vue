@@ -57,13 +57,14 @@ async function onRun() {
 
 <template>
     <div class="grid gap-5 lg:grid-cols-2">
-        <RecommendForm :loading="loading" @submit="onSubmit" />
+        <RecommendForm :loading="loading" class="min-w-0" @submit="onSubmit" />
         <RecommendResult
             :result="result"
             :error="error"
             :running="running"
             :run-result="runResult"
             :run-error="runError"
+            class="min-w-0"
             @run="onRun"
         />
     </div>

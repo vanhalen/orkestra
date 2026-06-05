@@ -41,7 +41,9 @@ async function compare() {
 
 <template>
     <div class="grid gap-5 lg:grid-cols-2">
-        <section class="space-y-4 rounded-2xl border border-line bg-card p-5 shadow-sm">
+        <section
+            class="min-w-0 space-y-4 rounded-2xl border border-line bg-card p-5 shadow-sm"
+        >
             <div>
                 <label class="kicker mb-1.5 block">Pergunta (mesma para todos)</label>
                 <textarea
@@ -65,6 +67,6 @@ async function compare() {
             <p v-if="error" class="text-sm text-red-600">{{ error }}</p>
         </section>
 
-        <CompareResults :result="result" :loading="loading" />
+        <CompareResults :result="result" :loading="loading" class="min-w-0" />
     </div>
 </template>
