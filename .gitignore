@@ -64,3 +64,7 @@ Thumbs.db
 .claude/
 .cursorrules
 CLAUDE.md
+
+# Tooling de skills/agents (local)
+.agents/
+skills-lock.json
