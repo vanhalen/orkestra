@@ -1,6 +1,9 @@
 const BASE = (import.meta.env.VITE_API_URL as string) || "http://localhost:3000";
 const KEY_STORAGE = "orkestra_openrouter_key";
 
+/** Base pública da API (para links externos, ex.: /docs). */
+export const API_BASE = BASE;
+
 export type OrkModel = {
     id: string;
     name: string;
