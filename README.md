@@ -2,8 +2,10 @@
 
 > Camada de **seleção, comparação e recomendação de LLMs** sobre o [OpenRouter](https://openrouter.ai/) — você traz sua própria API key (BYOK).
 
+[![Demo online](https://img.shields.io/badge/demo-online-5326e0)](https://orkestra.rodrigorchagas.com.br/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-orange)
+
+🔗 **Acesse:** **[orkestra.rodrigorchagas.com.br](https://orkestra.rodrigorchagas.com.br/)** · **API docs:** [/docs](https://orkestra.rodrigorchagas.com.br/docs)
 
 O Orkestra não hospeda modelos: usa o catálogo e o roteamento do OpenRouter e adiciona a inteligência para responder *"qual modelo devo usar para esta tarefa, com este orçamento e estas restrições?"*.
 
@@ -11,10 +13,10 @@ O Orkestra não hospeda modelos: usa o catálogo e o roteamento do OpenRouter e 
 
 ## 🚦 Status
 
-Projeto em desenvolvimento ativo. A v2 foi construída do zero seguindo o plano em [`docs/`](docs/); o protótipo inicial (rotas `/chat/*` com key via `.env`) foi **aposentado** nessa reconstrução.
+**No ar** em **[orkestra.rodrigorchagas.com.br](https://orkestra.rodrigorchagas.com.br/)**. A v2 foi construída do zero seguindo o plano em [`docs/`](docs/); o protótipo inicial (rotas `/chat/*` com key via `.env`) foi **aposentado** nessa reconstrução.
 
-- **API pronta:** **BYOK por requisição**, catálogo `GET /v1/models` e as rotas `recommend` / `run` / `compare`, com segurança (helmet/cors/rate-limit), fallback + timeout e docs OpenAPI em `/docs`.
-- **Em construção:** a tela de divulgação em Vue (cliente visual da API). Ver [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- **API:** **BYOK por requisição**, catálogo `GET /v1/models` e as rotas `recommend` / `run` / `compare`, com segurança (helmet/cors/rate-limit), fallback + timeout e docs OpenAPI em `/docs`.
+- **Tela de divulgação:** SPA em **Vue 3 + Vite + Tailwind**, responsiva e com a identidade visual do Orkestra — cola sua key, navega o catálogo, recomenda/executa e compara modelos lado a lado.
 
 Para a visão e o plano completos, veja [`docs/VISAO.md`](docs/VISAO.md) e [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
@@ -35,7 +37,7 @@ Para a visão e o plano completos, veja [`docs/VISAO.md`](docs/VISAO.md) e [`doc
 ### Requisitos
 
 - **Node.js 22+** (mínimo 20)
-- Para usar as rotas que chamam o OpenRouter (próximas sprints): uma **API key** do [OpenRouter](https://openrouter.ai/settings/keys), enviada **por requisição** (BYOK) — não vai no `.env`.
+- Para usar as rotas que chamam o OpenRouter: uma **API key** do [OpenRouter](https://openrouter.ai/settings/keys), enviada **por requisição** (BYOK) — não vai no `.env`.
 
 ### Passos
 
@@ -77,7 +79,7 @@ npm run loadtest     # teste de carga (autocannon) contra /health (servidor no a
 
 ## 🔌 API
 
-Documentação interativa (OpenAPI) em **`/docs`** com o servidor no ar. Rotas que chamam o OpenRouter exigem o header `Authorization: Bearer sk-or-...`.
+Documentação interativa (OpenAPI) em **[`/docs`](https://orkestra.rodrigorchagas.com.br/docs)**. Rotas que chamam o OpenRouter exigem o header `Authorization: Bearer sk-or-...`. Em produção a base é `https://orkestra.rodrigorchagas.com.br`; localmente, `http://localhost:3000`.
 
 | Rota | Auth | Descrição |
 |------|:----:|-----------|
@@ -109,7 +111,9 @@ Contrato completo em [docs/API.md](docs/API.md).
 
 ## 🖥 Tela de divulgação (web)
 
-SPA em **Vue 3 + Vite + Tailwind** (em [`web/`](web/)) que consome a API: cola a key do OpenRouter (fica só no `sessionStorage`), navega o catálogo, recomenda/executa e compara modelos lado a lado.
+**No ar:** **[orkestra.rodrigorchagas.com.br](https://orkestra.rodrigorchagas.com.br/)**
+
+SPA em **Vue 3 + Vite + Tailwind** (em [`web/`](web/)), responsiva e com a identidade visual do Orkestra. Consome a API: cola a key do OpenRouter (fica só no `sessionStorage`), navega o catálogo, recomenda/executa e compara modelos lado a lado.
 
 ```bash
 cd web
@@ -117,15 +121,13 @@ npm install
 npm run dev      # http://localhost:5173 (aponta para a API em http://localhost:3000)
 ```
 
-Configure a URL da API com `VITE_API_URL` se necessário. Suba a API (`npm run dev` na raiz) em paralelo.
+Configure a URL da API com `VITE_API_URL` se necessário (em produção, a do domínio). Suba a API (`npm run dev` na raiz) em paralelo.
 
 ## 🛠 Tecnologias
 
-- **TypeScript** + **Node.js 22**
-- [Fastify](https://fastify.dev/) 5
-- [OpenRouter SDK](https://openrouter.ai/docs)
-- [tsx](https://github.com/privatenumber/tsx) (execução/watch em desenvolvimento)
-- _v2:_ Vue 3 + Vite + Tailwind (tela de divulgação)
+- **API:** TypeScript · Node.js 22 · [Fastify](https://fastify.dev/) 5 · [Zod](https://zod.dev/) · [OpenRouter API](https://openrouter.ai/docs) (via `fetch`) · [tsx](https://github.com/privatenumber/tsx)
+- **Web:** [Vue 3](https://vuejs.org/) · [Vite](https://vite.dev/) · [Tailwind CSS](https://tailwindcss.com/)
+- **Qualidade:** Vitest · ESLint · Prettier
 
 ## 🤝 Contribuindo
 
