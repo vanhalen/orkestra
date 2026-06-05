@@ -4,6 +4,7 @@ import { TABS, type TabId } from "./tabs";
 import AppHeader from "./components/AppHeader.vue";
 import ApiKeyBar from "./components/ApiKeyBar.vue";
 import TabNav from "./components/TabNav.vue";
+import AppFooter from "./components/AppFooter.vue";
 import RecommendPanel from "./components/recommend/RecommendPanel.vue";
 import ComparePanel from "./components/compare/ComparePanel.vue";
 import CatalogPanel from "./components/catalog/CatalogPanel.vue";
@@ -38,12 +39,7 @@ const meta = computed(() => TABS.find((t) => t.id === tab.value)!);
                 </KeepAlive>
             </Transition>
 
-            <footer
-                class="mt-14 flex flex-col items-center gap-2 border-t border-line pt-7 text-center"
-            >
-                <img src="/orkestra-emblem.svg" alt="" class="h-6 w-6 opacity-40" />
-                <p class="kicker">Sua key nunca é armazenada no servidor · BYOK</p>
-            </footer>
+            <AppFooter />
         </div>
     </div>
 </template>
