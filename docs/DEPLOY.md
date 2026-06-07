@@ -1,46 +1,61 @@
 # Deploy
 
-O Orkestra é stateless (BYOK — não guarda segredos de usuário), então o deploy é simples. Há duas topologias.
+O Orkestra é **stateless** (BYOK — não guarda segredos de usuário) e roda em **porta única**: a API serve a SPA buildada (`web/dist`, via `plugins/staticWeb.ts`), a API em `/v1/*` e o Swagger em `/docs` — tudo na mesma origem, sem CORS.
 
-## Requisitos
+Requisitos: nenhuma API key no servidor (é BYOK). Rodar atrás de **HTTPS**.
 
-- Node.js 22+ no servidor.
-- Nenhuma API key do OpenRouter no servidor: ela é enviada por requisição (BYOK).
+---
 
-## Opção A — Porta única (API serve a SPA)
+## Docker + Portainer + Traefik (recomendado)
 
-Recomendado para demo/divulgação. A API serve o build do front em `web/dist` automaticamente (ver `plugins/staticWeb.ts`).
+A imagem ([`Dockerfile`](../Dockerfile)) builda a SPA e empacota tudo numa imagem só. O [`docker-compose.yml`](../docker-compose.yml) já traz as labels do Traefik (HTTPS via Let's Encrypt) e um healthcheck.
 
-```bash
-# 1. build do front
-cd web && npm install && npm run build && cd ..
+**1. DNS:** crie um registro **A** `orkestra.<seu-dominio>` → IP do servidor.
 
-# 2. instala e sobe a API (serve /v1, /docs e a SPA na mesma porta)
-npm install
-npm run dev          # ou rode src/index.ts com um process manager (pm2, systemd...)
+**2. Rede:** o compose usa a rede externa de borda do Traefik. Confirme o nome real (com prefixo do projeto) e ajuste em `docker-compose.yml` se necessário:
+
+```yaml
+networks:
+  proxy:
+    external: true
+    name: stack_proxy   # a mesma rede onde o Traefik roteia
 ```
 
-Tudo fica em `http://SEU_HOST:PORT`:
-- SPA na raiz `/`
-- API em `/v1/*`, `/health`
-- Docs OpenAPI em `/docs`
+E nas labels: `traefik.docker.network=stack_proxy`, `...rule=Host(\`orkestra.seu-dominio\`)`, `entrypoints=websecure`, `tls.certresolver=letsencrypt`.
 
-Como front e API ficam na mesma origem, não há questão de CORS.
+**3. Deploy na Portainer** (Stack a partir do Git):
 
-## Opção B — Separados (front estático + API)
+- Portainer → **Stacks** → *Add stack* → **Repository**
+- Repository URL: `https://github.com/vanhalen/orkestra`
+- Compose path: `docker-compose.yml`
+- *Deploy* — a Portainer clona, builda a imagem e sobe. O Traefik passa a rotear `orkestra.seu-dominio` → container `:3000` com HTTPS automático.
 
-Hospede o `web/dist` em qualquer CDN/host estático (Netlify, Vercel, Pages...) e a API em outro serviço.
+**Atualizar:** na Portainer, *Pull and redeploy* (ou re-deploy da stack). Sem publicar porta no host — o tráfego entra pelo Traefik.
 
-- No build do front, defina `VITE_API_URL` apontando para a URL pública da API.
-- Na API, defina `WEB_ORIGIN` com a origem do front para liberar o CORS.
+### Build/teste local
 
 ```bash
-# front
-cd web && VITE_API_URL=https://api.seu-dominio.com npm run build
-
-# API
-WEB_ORIGIN=https://app.seu-dominio.com PORT=8080 node --import tsx src/index.ts
+docker build -t orkestra .
+docker run --rm -p 3000:3000 orkestra
+curl http://localhost:3000/health   # → {"status":"ok"}
 ```
+
+---
+
+## Sem Docker?
+
+Não precisa de nada especial: `npm ci && npm run build:web && npm start` sobe a API + SPA na `PORT` configurada — basta pôr atrás de qualquer reverse proxy com HTTPS (nginx, Caddy, etc.).
+
+---
+
+## Front e API separados (opcional)
+
+Se quiser o front num host estático (CDN) e a API à parte:
+
+- Front: `cd web && VITE_API_URL=https://api.seu-dominio npm run build` → publique `web/dist`.
+- API: defina `WEB_ORIGIN=https://app.seu-dominio` (libera o CORS).
+
+---
 
 ## Variáveis de ambiente (servidor)
 
@@ -49,7 +64,7 @@ Todas opcionais (têm default) — ver [`.env.example`](../.env.example):
 | Variável | Default | Uso |
 |----------|---------|-----|
 | `PORT` / `HOST` | `3000` / `0.0.0.0` | bind |
-| `WEB_ORIGIN` | `*` | origem permitida no CORS (use a URL do front em produção) |
+| `WEB_ORIGIN` | `*` | origem permitida no CORS (porta única = mesma origem) |
 | `REQUEST_TIMEOUT_MS` | `30000` | timeout por chamada a modelo |
 | `CATALOG_TTL_MS` | `300000` | cache do catálogo |
 | `RATE_LIMIT_MAX` | `120` | requisições/IP/minuto |
@@ -58,7 +73,7 @@ Todas opcionais (têm default) — ver [`.env.example`](../.env.example):
 ## Checklist
 
 - [ ] `npm test`, `npm run typecheck`, `npm run lint` verdes.
-- [ ] `npm run smoke` (smoke E2E contra o catálogo real).
-- [ ] Build do front (`web/`) gerado se for usar a Opção A.
-- [ ] `WEB_ORIGIN` restrito em produção (não usar `*`).
-- [ ] Rodar atrás de HTTPS (proxy reverso) — a key trafega no header.
+- [ ] `npm run smoke` (E2E contra o catálogo real).
+- [ ] DNS `A` do subdomínio → IP do servidor.
+- [ ] Rede externa do Traefik correta no `docker-compose.yml` (`stack_proxy`).
+- [ ] HTTPS ativo (Traefik + Let's Encrypt) — a key trafega no header.

@@ -1,7 +1,11 @@
-const BASE = (import.meta.env.VITE_API_URL as string) || "http://localhost:3000";
+// Produção (build): usa a MESMA origem que serviu a SPA (porta única) → caminhos
+// relativos. Dev: fala com a API local. Sobrescreva com VITE_API_URL se precisar.
+const BASE =
+    (import.meta.env.VITE_API_URL as string) ||
+    (import.meta.env.DEV ? "http://localhost:3000" : "");
 const KEY_STORAGE = "orkestra_openrouter_key";
 
-/** Base pública da API (para links externos, ex.: /docs). */
+/** Base pública da API (para links externos, ex.: /docs). Vazia = mesma origem. */
 export const API_BASE = BASE;
 
 export type OrkModel = {

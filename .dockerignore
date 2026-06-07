@@ -1,0 +1,25 @@
+# dependências e artefatos (reconstruídos na imagem)
+node_modules
+web/node_modules
+web/dist
+dist
+coverage
+
+# git e ambiente
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+
+# ferramentas de IA / editor (local)
+.claude
+.cursor
+.agents
+.vscode
+skills-lock.json
+
+# não precisam no runtime
+tests
+docs
+*.md

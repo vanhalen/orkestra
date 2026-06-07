@@ -1,0 +1,47 @@
+# Orkestra — stack Docker (Portainer + Traefik).
+# API + SPA + /docs na mesma porta. O Traefik faz o roteamento e o HTTPS
+# (Let's Encrypt) via labels — igual aos seus outros serviços.
+services:
+    orkestra:
+        build: .
+        image: orkestra:latest
+        container_name: orkestra
+        restart: unless-stopped
+        init: true
+        environment:
+            PORT: 3000
+            HOST: 0.0.0.0
+            # mesma origem (porta única) — não precisa restringir CORS
+            WEB_ORIGIN: "*"
+            # REQUEST_TIMEOUT_MS: 30000
+            # CATALOG_TTL_MS: 300000
+            # RATE_LIMIT_MAX: 120
+            # MAX_BODY_BYTES: 10485760
+        networks:
+            - proxy
+        labels:
+            - traefik.enable=true
+            - traefik.docker.network=stack_proxy
+            - traefik.http.routers.orkestra.rule=Host(`orkestra.rodrigorchagas.com.br`)
+            - traefik.http.routers.orkestra.entrypoints=websecure
+            - traefik.http.routers.orkestra.tls.certresolver=letsencrypt
+            - traefik.http.services.orkestra.loadbalancer.server.port=3000
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "node",
+                    "-e",
+                    "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+                ]
+            interval: 30s
+            timeout: 5s
+            retries: 3
+            start_period: 10s
+
+networks:
+    # rede externa de borda do Traefik (a mesma onde ele roteia os serviços).
+    # Ajuste `name` para o nome real da sua rede, se for diferente.
+    proxy:
+        external: true
+        name: stack_proxy
