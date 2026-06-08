@@ -1,6 +1,6 @@
 # Orkestra
 
-> Camada de **seleção, comparação e recomendação de LLMs** sobre o [OpenRouter](https://openrouter.ai/) — você traz sua própria API key (BYOK).
+> Camada de **seleção, comparação e recomendação de LLMs** sobre o [OpenRouter](https://openrouter.ai/) - você traz sua própria API key (BYOK).
 
 [![Demo online](https://img.shields.io/badge/demo-online-5326e0)](https://orkestra.rodrigorchagas.com.br/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -9,14 +9,14 @@
 
 O Orkestra não hospeda modelos: usa o catálogo e o roteamento do OpenRouter e adiciona a inteligência para responder *"qual modelo devo usar para esta tarefa, com este orçamento e estas restrições?"*.
 
-**Cenário típico:** você precisa extrair informação de um PDF e quer o modelo **mais barato e mais rápido** que dê conta. Você descreve a tarefa + restrições e o Orkestra retorna o modelo ideal — pronto para uso ou já com a resposta executada.
+**Cenário típico:** você precisa extrair informação de um PDF e quer o modelo **mais barato e mais rápido** que dê conta. Você descreve a tarefa + restrições e o Orkestra retorna o modelo ideal - pronto para uso ou já com a resposta executada.
 
 ## 🚦 Status
 
-**No ar** em **[orkestra.rodrigorchagas.com.br](https://orkestra.rodrigorchagas.com.br/)**. A v2 foi construída do zero seguindo o plano em [`docs/`](docs/); o protótipo inicial (rotas `/chat/*` com key via `.env`) foi **aposentado** nessa reconstrução.
+**No ar** em **[orkestra.rodrigorchagas.com.br](https://orkestra.rodrigorchagas.com.br/)**.
 
 - **API:** **BYOK por requisição**, catálogo `GET /v1/models` e as rotas `recommend` / `run` / `compare`, com segurança (helmet/cors/rate-limit), fallback + timeout e docs OpenAPI em `/docs`.
-- **Tela de divulgação:** SPA em **Vue 3 + Vite + Tailwind**, responsiva e com a identidade visual do Orkestra — cola sua key, navega o catálogo, recomenda/executa e compara modelos lado a lado.
+- **Tela de divulgação:** SPA em **Vue 3 + Vite + Tailwind**, responsiva e com a identidade visual do Orkestra - cola sua key, navega o catálogo, recomenda/executa e compara modelos lado a lado.
 
 Para a visão e o plano completos, veja [`docs/VISAO.md`](docs/VISAO.md) e [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
@@ -37,9 +37,9 @@ Para a visão e o plano completos, veja [`docs/VISAO.md`](docs/VISAO.md) e [`doc
 ### Requisitos
 
 - **Node.js 22+** (mínimo 20)
-- Para usar as rotas que chamam o OpenRouter: uma **API key** do [OpenRouter](https://openrouter.ai/settings/keys), enviada **por requisição** (BYOK) — não vai no `.env`.
+- Para usar as rotas que chamam o OpenRouter: uma **API key** do [OpenRouter](https://openrouter.ai/settings/keys), enviada **por requisição** (BYOK) - não vai no `.env`.
 
-### Passos
+### Local (npm)
 
 ```bash
 npm install
@@ -54,6 +54,20 @@ curl http://localhost:3000/health
 # → {"status":"ok"}
 ```
 
+### Com Docker
+
+A imagem ([`Dockerfile`](Dockerfile)) já faz o build da SPA e empacota tudo numa imagem só, servida em porta única:
+
+```bash
+docker build -t orkestra .
+docker run --rm -p 3000:3000 orkestra
+curl http://localhost:3000/health   # → {"status":"ok"}
+```
+
+Para deploy em produção (Traefik + HTTPS via Portainer, ou front/API separados), veja [docs/DEPLOY.md](docs/DEPLOY.md).
+
+### Configuração do servidor
+
 O `.env` configura **apenas o servidor** (sem segredos de usuário). Todas as variáveis são opcionais:
 
 | Variável | Default | Descrição |
@@ -62,9 +76,9 @@ O `.env` configura **apenas o servidor** (sem segredos de usuário). Todas as va
 | `HOST` | `0.0.0.0` | Host de bind |
 | `WEB_ORIGIN` | `*` | Origem permitida no CORS (a SPA) |
 | `REQUEST_TIMEOUT_MS` | `30000` | Timeout por chamada a modelo |
-| `HTTP_REFERER` / `TITLE` | — | Headers enviados ao OpenRouter |
+| `HTTP_REFERER` / `TITLE` | - | Headers enviados ao OpenRouter |
 
-> A API key do OpenRouter é **BYOK**: enviada no header `Authorization` por requisição, nunca armazenada — ver [ADR-001](docs/DECISOES.md). O contrato das rotas da v2 está em [docs/API.md](docs/API.md).
+> A API key do OpenRouter é **BYOK**: enviada no header `Authorization` por requisição, nunca armazenada - ver [ADR-001](docs/DECISOES.md). O contrato das rotas da v2 está em [docs/API.md](docs/API.md).
 
 ### Scripts
 
@@ -83,8 +97,8 @@ Documentação interativa (OpenAPI) em **[`/docs`](https://orkestra.rodrigorchag
 
 | Rota | Auth | Descrição |
 |------|:----:|-----------|
-| `GET /health` | — | Liveness |
-| `GET /v1/models` | — | Catálogo filtrável (`?supports=file,json&free=true&maxPrice=…&minContext=…&q=…`) |
+| `GET /health` | - | Liveness |
+| `GET /v1/models` | - | Catálogo filtrável (`?supports=file,json&free=true&maxPrice=…&minContext=…&q=…`) |
 | `POST /v1/recommend` | opcional¹ | Melhor modelo para a tarefa (heurística; `validate:true` roda probe real) |
 | `POST /v1/run` | ✔ | Executa a tarefa com fallback e devolve resposta + modelo usado (+ PDF) |
 | `POST /v1/compare` | ✔ | Roda vários modelos em paralelo, lado a lado |
@@ -110,8 +124,6 @@ curl -X POST http://localhost:3000/v1/compare \
 Contrato completo em [docs/API.md](docs/API.md).
 
 ## 🖥 Tela de divulgação (web)
-
-**No ar:** **[orkestra.rodrigorchagas.com.br](https://orkestra.rodrigorchagas.com.br/)**
 
 SPA em **Vue 3 + Vite + Tailwind** (em [`web/`](web/)), responsiva e com a identidade visual do Orkestra. Consome a API: cola a key do OpenRouter (fica só no `sessionStorage`), navega o catálogo, recomenda/executa e compara modelos lado a lado.
 
@@ -142,3 +154,7 @@ Contribuições são bem-vindas! Veja o [CONTRIBUTING.md](CONTRIBUTING.md). Para
 ## 📄 Licença
 
 [MIT](LICENSE) © 2026 Rodrigo Chagas
+
+---
+
+Se precisar de ajuda ou encontrar problemas, não hesite em abrir uma issue no repositório! 🚀
